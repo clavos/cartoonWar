@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+{# extends 'materialize/materialize_base.html' #}
+<html>
+    <head>
+        <title>Cartoon War</title>
+    </head>
+    <body>
+        <nav>
+            {% if user.is_authenticated == False %}
+                <a href="{% url 'login' %}">Login</a> |
+                <a href="{% url 'register' %}">Register</a> |
+            {% endif %}
+            <a href="{% url 'home' %}">Home</a> |
+            <a href="{% url 'all_cards' %}">Cards</a> |
+            {% if user.is_authenticated %}
+                <a href="{% url 'gamer_deck' %}">My Decks</a> |
+                <a href="{% url 'profile' %}">Profile</a> |
+                <a href="{% url 'edit_profile' %}">Edit Profile</a> |
+                <a href="{% url 'change_password' %}">Change Password</a> |
+                <a href="{% url 'logout' %}">Logout</a> |
+            {% endif %}
+        </nav>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

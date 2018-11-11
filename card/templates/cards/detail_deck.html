@@ -1,0 +1,33 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="content">
+        {% if user.is_authenticated %}
+            <h1>{{ deck.deck_name }}</h1>
+            {% for card in deck.cards.all %}
+                <p>
+                    <a href="{% url 'one_card' card.pk %}">{{ card.card_name }}</a>
+                    <a href="{% url 'change_cards' operation='remove' pk=card.pk deck_pk=deck.pk %}">
+                        <button type="button">Remove Card</button>
+                    </a>
+                </p>
+
+            {% endfor %}
+
+
+            <h1>Toutes mes cartes</h1>
+            {% for card in cards %}
+                <p>
+                    <a href="{% url 'one_card' card.pk %}">{{ card.card_name }}</a>
+                    {% if not card in deck.cards.all %}
+                    <a href="{% url 'change_cards' operation='add' pk=card.pk deck_pk=deck.pk %}">
+                        <button type="button">Add Card</button>
+                    </a>
+                    {% endif %}
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>Please login to see this page.</p>
+        {% endif %}
+    </div>
+{% endblock %}
