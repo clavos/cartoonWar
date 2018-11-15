@@ -133,5 +133,5 @@ def change_cards(request, operation, pk, deck_pk):
         Deck.make_card(deck, request.user, card)
     elif operation == 'remove':
         Deck.lose_card(deck, request.user, card)
-    return redirect('gamer_deck')
+    return redirect('one_deck', pk=deck_pk)
 

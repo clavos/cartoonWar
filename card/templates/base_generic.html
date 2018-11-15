@@ -1,26 +1,33 @@
 <!DOCTYPE html>
+<html lang="fr">
 {# extends 'materialize/materialize_base.html' #}
-<html>
     <head>
-        <title>Cartoon War</title>
+        <title>{% block title %}Cartoon War{% endblock %}</title>
     </head>
     <body>
-        <nav>
-            {% if user.is_authenticated == False %}
-                <a href="{% url 'login' %}">Login</a> |
-                <a href="{% url 'register' %}">Register</a> |
-            {% endif %}
-            <a href="{% url 'home' %}">Home</a> |
-            <a href="{% url 'all_cards' %}">Cards</a> |
-            {% if user.is_authenticated %}
-                <a href="{% url 'gamer_deck' %}">My Decks</a> |
-                <a href="{% url 'profile' %}">Profile</a> |
-                <a href="{% url 'edit_profile' %}">Edit Profile</a> |
-                <a href="{% url 'change_password' %}">Change Password</a> |
-                <a href="{% url 'logout' %}">Logout</a> |
-            {% endif %}
-        </nav>
-        {% block content %}
-        {% endblock %}
+        <header>
+            <nav>
+                <div class="nav-wrapper">
+                    <a href="#!" class="brand-logo">Logo</a>
+                    {% if user.is_authenticated == False %}
+                        <a href="{% url 'login' %}">Login</a> |
+                        <a href="{% url 'register' %}">Register</a> |
+                    {% endif %}
+                    <a href="{% url 'home' %}">Home</a> |
+                    <a href="{% url 'all_cards' %}">Cards</a> |
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'gamer_deck' %}">My Decks</a> |
+                        <a href="{% url 'profile' %}">Profile</a> |
+                        <a href="{% url 'edit_profile' %}">Edit Profile</a> |
+                        <a href="{% url 'change_password' %}">Change Password</a> |
+                        <a href="{% url 'logout' %}">Logout</a> |
+                    {% endif %}
+                </div>
+            </nav>
+        </header>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
     </body>
 </html>
