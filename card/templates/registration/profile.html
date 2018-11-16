@@ -1,0 +1,12 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Votre collection de cartes</h1>
+        {% for card in cards %}
+            <p>{{ card.card_name }}</p>
+        {% endfor %}
+    {% else %}
+        <p>Please login to see this page.</p>
+    {% endif %}
+{% endblock %}
