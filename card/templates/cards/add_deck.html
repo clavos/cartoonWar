@@ -15,7 +15,7 @@
             {% csrf_token %}
             {{ form.as_p }}
             <br>
-            <button type="submit">Submit</button>
+            <button type="submit" class="btn btn-success">Ajouter</button>
         </form>
         {{ form.errors }}
         {{ form.non_field_errors }}

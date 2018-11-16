@@ -31,15 +31,14 @@ def get_one_card(request, **kwargs):
 
 def profile(request):
     current_user = request.user
-    gamer = Collec.objects.get(current_user=current_user)
-    cards = gamer.cards.all()
+    cards = current_user.cards.all()
     return render(request, 'registration/profile.html', {"gamer": current_user, "cards": cards})
 
 
 def get_one_deck(request, **kwargs):
     deck = Deck.objects.get(pk=kwargs['pk'])
-    gamer = Collec.objects.get(current_user=request.user)
-    cards = gamer.cards.all()
+    current_user = request.user
+    cards = current_user.cards.all()
     return render(request, 'cards/detail_deck.html', {"cards": cards, "deck": deck})
 
 
@@ -102,7 +101,7 @@ def edit_profile(request):
 
         if form.is_valid():
             form.save()
-            return redirect(reverse('registration:view_profile'))
+            return redirect('profile')
     else:
         form = EditProfileForm(instance=request.user)
         args = {'form': form}
@@ -116,9 +115,9 @@ def change_password(request):
         if form.is_valid():
             form.save()
             update_session_auth_hash(request, form.user)
-            return redirect(reverse('registration:view_profile'))
+            return redirect('profile')
         else:
-            return redirect(reverse('registration:change_password'))
+            return render(request, 'registration/change_password.html',{'form': form})
     else:
         form = PasswordChangeForm(user=request.user)
 

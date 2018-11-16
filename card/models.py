@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.conf import settings
 
 
 class Card(models.Model):
@@ -10,6 +11,7 @@ class Card(models.Model):
     card_ptvie = models.IntegerField(default=0)
     card_image = models.ImageField(blank=True, null=True, upload_to="covers/card/%Y/%M/%D/")
     collection = models.ForeignKey("Collection", blank=True, null=True, on_delete=models.DO_NOTHING)
+    card_owners = models.ManyToManyField(User, related_name="cards", through="Collec")
     UNKNOWN = '-'
     MONSTRE = 'Monstre'
     SORT = 'Sort'
@@ -34,22 +36,9 @@ class Collection(models.Model):
 
 
 class Collec(models.Model):
-    current_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner')
-    cards = models.ManyToManyField("Card", blank=True)
-
-    @classmethod
-    def make_collec(cls, current_user, new_card):
-        gamer, created = cls.objects.get_or_create(
-            current_user=current_user
-        )
-        gamer.cards.add(new_card)
-
-    @classmethod
-    def lose_collec(cls, current_user, new_card):
-        gamer, created = cls.objects.get_or_create(
-            current_user=current_user
-        )
-        gamer.cards.remove(new_card)
+    current_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    cards = models.ForeignKey(Card, on_delete=models.CASCADE)
+    quantity = models.IntegerField(default=0)
 
 
 class Deck(models.Model):
@@ -83,12 +72,12 @@ class UserProfileManager(models.Manager):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=100, default='')
-    city = models.CharField(max_length=100, default='')
-    website = models.URLField(default='')
-    phone = models.IntegerField(default=0)
-    image = models.ImageField(upload_to='profile_image', blank=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    description = models.CharField(max_length=100, default='', blank=True, null=True)
+    city = models.CharField(max_length=100, default='London', blank=True, null=True)
+    phone = models.CharField(max_length=10,default='', blank=True, null=True)
+    image = models.ImageField(upload_to='profile_image', blank=True, null=True)
+    money = models.IntegerField(default=200)
 
     london = UserProfileManager()
 
@@ -96,9 +85,9 @@ class UserProfile(models.Model):
         return self.user.username
 
 
-def create_profile(sender, **kwargs):
-    if kwargs['created']:
-        user_profile = UserProfile.objects.create(user=kwargs['instance'])
+def create_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
 
 
-# post_save.connect(create_profile, sender=User)
+post_save.connect(create_profile, sender=User)
