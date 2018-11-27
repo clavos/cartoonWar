@@ -9,7 +9,7 @@ class Card(models.Model):
     card_cout = models.IntegerField(default=0)
     card_ptattaque = models.IntegerField(default=0)
     card_ptvie = models.IntegerField(default=0)
-    card_image = models.ImageField(blank=True, null=True, upload_to="covers/card/%Y/%M/%D/")
+    card_image = models.ImageField(blank=True, null=True, upload_to="covers/card/")
     collection = models.ForeignKey("Collection", blank=True, null=True, on_delete=models.DO_NOTHING)
     card_owners = models.ManyToManyField(User, related_name="cards", through="Collec")
     UNKNOWN = '-'
