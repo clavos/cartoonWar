@@ -3,6 +3,7 @@
 {% block content %}
 
         <p>Description : {{user.userprofile.description}} modifier le form</p>
+        <img src="{{ user.userprofile.image.url }}" width="240">
         <form method="post" class="form">
             {% csrf_token %}
             {{ form.as_p }}

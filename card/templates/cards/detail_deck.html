@@ -7,7 +7,7 @@
             <h1>{{ deck.deck_name }}</h1>
             {% for card in deck.cards.all %}
                 <p>
-                    <a href="{% url 'one_card' card.pk %}"><img src='{% static card.card_image.url %}' alt=card.card_name></a>
+                    <a href="{% url 'one_card' card.pk %}"><img src='{{ card.card_image.url }}' alt=card.card_name width="200"></a>
                     <a href="{% url 'change_cards' operation='remove' pk=card.pk deck_pk=deck.pk %}">
                         <button type="button" class="btn btn-danger">Retirer</button>
                     </a>

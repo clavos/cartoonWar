@@ -72,22 +72,22 @@ class UserProfileManager(models.Manager):
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     description = models.CharField(max_length=100, default='', blank=True, null=True)
-    city = models.CharField(max_length=100, default='London', blank=True, null=True)
+    # city = models.CharField(max_length=100, default='London', blank=True, null=True)
     phone = models.CharField(max_length=10,default='', blank=True, null=True)
     image = models.ImageField(upload_to='profile_image', blank=True, null=True)
     money = models.IntegerField(default=200)
 
-    london = UserProfileManager()
+    # london = UserProfileManager()
 
     def __str__(self):
         return self.user.username
 
 
-def create_profile(sender, instance, created, **kwargs):
-    if created:
-        UserProfile.objects.create(user=instance)
+def create_profile(sender, **kwargs):
+    if kwargs['created']:
+        user_profile = UserProfile.objects.create(user=kwargs['instance'])
 
 
 post_save.connect(create_profile, sender=User)
