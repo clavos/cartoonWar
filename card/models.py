@@ -81,8 +81,6 @@ class UserProfile(models.Model):
     image = models.ImageField(upload_to='profile_image', blank=True, null=True)
     money = models.IntegerField(default=200)
 
-    # london = UserProfileManager()
-
     def __str__(self):
         return self.user.username
 
@@ -91,7 +89,6 @@ def create_profile(sender, **kwargs):
     if kwargs['created']:
         user_profile = UserProfile.objects.create(user=kwargs['instance'])
         deck = Deck.objects.create(deck_name='Base', gamer=kwargs['instance'])
-        #cards_list = list()
         for i in range (1,31):
             collection = Collec.objects.create(current_user=kwargs['instance'], quantity=1, cards=Card.objects.get(pk=i))
             deck.cards.add(Card.objects.get(pk=i))

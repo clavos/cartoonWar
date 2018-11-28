@@ -3,9 +3,41 @@
 {% block content %}
     {% if user.is_authenticated %}
         <h1>Votre collection de cartes</h1>
-        {% for card in cards %}
-            <p>{{ card.card_name }}</p>
-        {% endfor %}
+        <div class="row">
+            {% for card, value in values.items %}
+                <div class="col-sm-2">
+                    <div class="card text-center" style="width: 11rem;">
+                        <div data-toggle="modal" data-target="#Modal{{ card.pk }}">
+                            {% if value %}
+                                <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer;">
+                            {% else %}
+                                <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer; filter: grayscale(100%);">
+                            {% endif %}
+                        </div>
+                        {% if value %}
+                            <div class="card-body">
+                                <a href="#" class="btn btn-primary">Vendre</a>
+                                <a href="#" class="btn btn-info">Echanger</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- Card Modal -->
+                    <div class="modal fade" id="Modal{{ card.pk }}" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLabel{{ card.pk }}">{{card.card_name}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
         <p>Please login to see this page.</p>
     {% endif %}

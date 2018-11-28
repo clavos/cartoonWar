@@ -31,8 +31,20 @@ def get_one_card(request, **kwargs):
 
 def profile(request):
     current_user = request.user
-    cards = current_user.cards.all()
-    return render(request, 'registration/profile.html', {"gamer": current_user, "cards": cards})
+    my_cards = current_user.cards.all()
+    cards = Card.objects.all()
+    values = {}
+    for all_card in cards:
+        temp = False
+        for my_card in my_cards:
+            if all_card.pk == my_card.pk:
+                temp = True
+        if temp is False:
+            values[all_card] = False
+        else:
+            values[all_card] = True
+
+    return render(request, 'registration/profile.html', {"gamer": current_user, "cards": cards, "values": values})
 
 
 def get_one_deck(request, **kwargs):
