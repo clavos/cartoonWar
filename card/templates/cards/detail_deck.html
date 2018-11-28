@@ -5,16 +5,34 @@
     <div class="content">
         {% if user.is_authenticated %}
             <h1>{{ deck.deck_name }}</h1>
+            <div class="row">
             {% for card in deck.cards.all %}
-                <p>
-                    <a href="{% url 'one_card' card.pk %}"><img src='{{ card.card_image.url }}' alt=card.card_name width="200"></a>
-                    <a href="{% url 'change_cards' operation='remove' pk=card.pk deck_pk=deck.pk %}">
-                        <button type="button" class="btn btn-danger">Retirer</button>
-                    </a>
-                </p>
-
+                <div class="col-sm-2">
+                    <div class="card text-center" style="width: 11rem;">
+                        <div data-toggle="modal" data-target="#Modal{{ card.pk }}">
+                            <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer;">
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'change_cards' operation='remove' pk=card.pk deck_pk=deck.pk %}" class="btn btn-danger">Retirer</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Modal -->
+                <div class="modal fade" id="Modal{{ card.pk }}" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ModalLabel{{ card.pk }}">{{card.card_name}}</h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Some Text</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-
+            </div>
 
             <h1>Toutes mes cartes</h1>
             {% for card in cards %}

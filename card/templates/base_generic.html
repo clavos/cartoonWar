@@ -3,46 +3,58 @@
 {# extends 'materialize/materialize_base.html' #}
     <head>
         <title>{% block title %}Cartoon War{% endblock %}</title>
-        {# Load the tag library #}
-        {% load bootstrap3 %}
+         <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        {% load static %}
+        <!--Favicon-->
+        <link rel="shortcut icon" href="media/images/favicon.ico" title="Favicon"/>
 
-        {# Load CSS and JavaScript #}
-        {% bootstrap_css %}
-        {% bootstrap_javascript %}
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     </head>
     <body>
         <header>
-
-            <nav class="navbar navbar-inverse">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">WebSiteName</a>
-                    </div>
-                    <div class="collapse navbar-collapse" id="myNavbar">
-                        <ul class="nav navbar-nav">
-                            <li class="active"><a href="{% url 'home' %}">Home</a></li>
-                            <li><a href="{% url 'all_cards' %}">Les cartes</a></li>
-                            {% if user.is_authenticated %}
-                                <li><a href="{% url 'profile' %}">Ma collection</a></li>
-                                <li><a href="{% url 'gamer_deck' %}">Mes decks</a></li>
-                            {% endif %}
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            {% if user.is_authenticated == False %}
-                                <li><a href="{% url 'login' %}"><span class="glyphicon glyphicon-user"></span> Connexion</a></li>
-                                <li><a href="{% url 'register' %}"><span class="glyphicon glyphicon-log-in"></span> S'inscrire</a></li>
-                            {% endif %}
-                            {% if user.is_authenticated %}
-                                <li><a href="{% url 'edit_profile' %}"><span class="glyphicon glyphicon-user"></span> Profile</a></li>
-                                <li><a href="{% url 'logout' %}"><span class="glyphicon glyphicon-log-out"></span> Deconnexion</a></li>
-                            {% endif %}
-                        </ul>
-                    </div>
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <a class="navbar-brand" href="{% url 'home' %}">CartoonWar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                      <li class="nav-item active">
+                        <a class="nav-link" href="{% url 'home' %}">Accueil <span class="sr-only">(current)</span></a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'all_cards' %}">Cartes</a>
+                      </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'profile' %}">Collection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'gamer_deck' %}">Decks</a>
+                        </li>
+                    {% endif %}
+                    </ul>
+                    <ul class="navbar-nav my-2 my-lg-0">
+                        {% if user.is_authenticated == False %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'login' %}">Connexion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'register' %}">Inscription</a>
+                            </li>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'edit_profile' %}">Profil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">Déconnexion</a>
+                            </li>
+                        {% endif %}
+                    </ul>
                 </div>
             </nav>
             <nav>
@@ -57,5 +69,9 @@
             {% block content %}
             {% endblock %}
         </div>
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     </body>
 </html>

@@ -12,6 +12,8 @@ class Card(models.Model):
     card_image = models.ImageField(blank=True, null=True, upload_to="covers/card/")
     collection = models.ForeignKey("Collection", blank=True, null=True, on_delete=models.DO_NOTHING)
     card_owners = models.ManyToManyField(User, related_name="cards", through="Collec")
+    #cout_achat = models.IntegerField(default=0)
+    #cout_vente = models.IntegerField(default=0)
     UNKNOWN = '-'
     MONSTRE = 'Monstre'
     SORT = 'Sort'
@@ -88,6 +90,14 @@ class UserProfile(models.Model):
 def create_profile(sender, **kwargs):
     if kwargs['created']:
         user_profile = UserProfile.objects.create(user=kwargs['instance'])
+        deck = Deck.objects.create(deck_name='Base', gamer=kwargs['instance'])
+        #cards_list = list()
+        for i in range (1,31):
+            collection = Collec.objects.create(current_user=kwargs['instance'], quantity=1, cards=Card.objects.get(pk=i))
+            deck.cards.add(Card.objects.get(pk=i))
+        deck.save()
+
+
 
 
 post_save.connect(create_profile, sender=User)
