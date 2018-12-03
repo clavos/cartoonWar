@@ -24,6 +24,7 @@ from card import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('card/all/', views.get_all_cards, name='all_cards'),
+    path('card/buy/', views.get_new_cards, name='new_cards'),
     re_path(r'^card/(?P<pk>\d+)/', views.get_one_card, name='one_card'),
     re_path(r'^deck/(?P<pk>\d+)/', views.get_one_deck, name='one_deck'),
     re_path(r'^connect/(?P<operation>.+)/(?P<deck_pk>\d+)/(?P<pk>\d+)/$', views.change_cards, name='change_cards'),

@@ -9,15 +9,21 @@
                     <div class="card text-center" style="width: 11rem;">
                         <div data-toggle="modal" data-target="#Modal{{ card.pk }}">
                             {% if value %}
+                                {% for collect in collec %}
+                                    {% if collect.cards.pk == card.pk %}
+                                        <span class="badge badge-pill badge-success">X{{collect.quantity}}</span>
+                                    {% endif %}
+                                {% endfor %}
                                 <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer;">
                             {% else %}
+                                <span class="badge badge-pill badge-secondary">X0</span>
                                 <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer; filter: grayscale(100%);">
                             {% endif %}
                         </div>
                         {% if value %}
                             <div class="card-body">
-                                <a href="#" class="btn btn-primary">Vendre</a>
-                                <a href="#" class="btn btn-info">Echanger</a>
+                                <a href="#" class="btn btn-outline-primary btn-lg btn-block">Vendre</a>
+                                <a href="#" class="btn btn-outline-primary btn-block">Echanger</a>
                             </div>
                         {% endif %}
                     </div>

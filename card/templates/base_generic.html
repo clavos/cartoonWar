@@ -35,6 +35,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'gamer_deck' %}">Decks</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'new_cards' %}">Acheter</a>
+                        </li>
                     {% endif %}
                     </ul>
                     <ul class="navbar-nav my-2 my-lg-0">
@@ -47,6 +50,9 @@
                             </li>
                         {% endif %}
                         {% if user.is_authenticated %}
+                            <li class="nav-item">
+                                <p>{{user.userprofile.money}}</p>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'edit_profile' %}">Profil</a>
                             </li>
@@ -69,6 +75,12 @@
             {% block content %}
             {% endblock %}
         </div>
+        <footer style="display: block;">
+            <p>Posted by: Hege Refsnes</p>
+            <p>Contact information:
+                <a href="mailto:someone@example.com"> someone@example.com</a>.
+            </p>
+        </footer>
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

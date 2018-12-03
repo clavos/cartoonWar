@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import TemplateView
+from random import randint
 
 from card.forms import (
     RegistrationForm,
@@ -28,23 +29,40 @@ def get_one_card(request, **kwargs):
     card = Card.objects.get(pk=kwargs['pk'])
     return render(request, 'cards/detail_card.html', {"card": card})
 
+def get_new_cards(request):
+    current_user = request.user
+    if current_user.userprofile.money > 100:
+        #current_user.userprofile.money -= 100
+        #current_user.userprofile.save()
+        card_count = Card.objects.all().count()
+        cards = []
+        for i in range (8):
+            id = randint(1, card_count)
+            cards.append(Card.objects.get(pk=id))
+            collection = Collec.objects.get_or_create(current_user=current_user,cards=Card.objects.get(pk=id))
+            quantity = Collec.objects.get(current_user=current_user,cards=Card.objects.get(pk=id)).quantity
+            collection = Collec.objects.filter(current_user=current_user,cards=Card.objects.get(pk=id)).update(quantity=quantity+1)
+        return render(request, 'cards/detail_pack.html', {"cards": cards})
+    else:
+        return render(request, 'cards/no_pack.html')
+
 
 def profile(request):
     current_user = request.user
-    my_cards = current_user.cards.all()
+    collec = current_user.collec_set.all()
     cards = Card.objects.all()
     values = {}
     for all_card in cards:
         temp = False
-        for my_card in my_cards:
-            if all_card.pk == my_card.pk:
+        for my_collec in collec:
+            if all_card.pk == my_collec.cards.pk:
                 temp = True
         if temp is False:
             values[all_card] = False
         else:
             values[all_card] = True
 
-    return render(request, 'registration/profile.html', {"gamer": current_user, "cards": cards, "values": values})
+    return render(request, 'registration/profile.html', {"gamer": current_user, "collec": collec, "values": values})
 
 
 def get_one_deck(request, **kwargs):

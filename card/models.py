@@ -80,6 +80,8 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=10,default='', blank=True, null=True)
     image = models.ImageField(upload_to='profile_image', blank=True, null=True)
     money = models.IntegerField(default=200)
+    #friends = models.ManyToManyField(User, related_name="friends")
+    #following = models.ManyToManyField(User, related_name="follow")
 
     def __str__(self):
         return self.user.username
