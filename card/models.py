@@ -42,6 +42,19 @@ class Collec(models.Model):
     cards = models.ForeignKey(Card, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
 
+    @classmethod
+    def swap_card(cls, current_card, current_user):
+        quantity = cls.objects.get(current_user=current_user, cards=current_card).quantity
+        collec = cls.objects.filter(current_user=current_user, cards=current_card)
+        if quantity > 1:
+            collec.update(quantity=quantity - 1)
+            current_user.userprofile.money += 10
+            current_user.userprofile.save()
+        else:
+            collec.delete()
+            current_user.userprofile.money += 10
+            current_user.userprofile.save()
+
 
 class Deck(models.Model):
     deck_name = models.CharField(max_length=255)

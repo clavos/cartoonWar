@@ -29,19 +29,21 @@ def get_one_card(request, **kwargs):
     card = Card.objects.get(pk=kwargs['pk'])
     return render(request, 'cards/detail_card.html', {"card": card})
 
+
 def get_new_cards(request):
     current_user = request.user
     if current_user.userprofile.money > 100:
-        #current_user.userprofile.money -= 100
-        #current_user.userprofile.save()
+        # current_user.userprofile.money -= 100
+        # current_user.userprofile.save()
         card_count = Card.objects.all().count()
         cards = []
-        for i in range (8):
+        for i in range(8):
             id = randint(1, card_count)
             cards.append(Card.objects.get(pk=id))
-            collection = Collec.objects.get_or_create(current_user=current_user,cards=Card.objects.get(pk=id))
-            quantity = Collec.objects.get(current_user=current_user,cards=Card.objects.get(pk=id)).quantity
-            collection = Collec.objects.filter(current_user=current_user,cards=Card.objects.get(pk=id)).update(quantity=quantity+1)
+            collection = Collec.objects.get_or_create(current_user=current_user, cards=Card.objects.get(pk=id))
+            quantity = Collec.objects.get(current_user=current_user, cards=Card.objects.get(pk=id)).quantity
+            collection = Collec.objects.filter(current_user=current_user, cards=Card.objects.get(pk=id)).update(
+                quantity=quantity + 1)
         return render(request, 'cards/detail_pack.html', {"cards": cards})
     else:
         return render(request, 'cards/no_pack.html')
@@ -147,7 +149,7 @@ def change_password(request):
             update_session_auth_hash(request, form.user)
             return redirect('profile')
         else:
-            return render(request, 'registration/change_password.html',{'form': form})
+            return render(request, 'registration/change_password.html', {'form': form})
     else:
         form = PasswordChangeForm(user=request.user)
 
@@ -164,3 +166,12 @@ def change_cards(request, operation, pk, deck_pk):
         Deck.lose_card(deck, request.user, card)
     return redirect('one_deck', pk=deck_pk)
 
+
+def trade_cards(request, operation, pk):
+    current_user = request.user
+    card = Card.objects.get(pk=pk)
+    if operation == 'sell':
+        Collec.swap_card(card, current_user)
+    elif operation == 'remove':
+        Collec.swap_card(card, current_user)
+    return redirect('profile')
