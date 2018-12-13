@@ -32,6 +32,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/profile/', views.profile, name='profile'),
     path('accounts/register/', views.register, name='register'),
+    re_path(r'^accounts/activate/(?P<uid>.+)/(?P<token>.+)', views.activate, name='activate'),
     re_path(r'^profile/$', views.view_profile, name='view_profile'),
     re_path(r'^profile/(?P<pk>\d+)/$', views.view_profile, name='view_profile_with_pk'),
     re_path(r'^profile/edit/$', views.edit_profile, name='edit_profile'),

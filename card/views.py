@@ -1,19 +1,22 @@
+from django.conf import settings
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
+from django.contrib.auth.models import User
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.views.generic import TemplateView
-from random import randint
-
 from card.forms import (
     RegistrationForm,
     EditProfileForm,
     DeckForm
 )
-
-from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
-from django.contrib.auth import update_session_auth_hash
-
 from card.models import Card, Collection, Deck, Collec
+from random import randint
+from card.token import activation_token
 
 
 def home(request):
@@ -107,8 +110,26 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            form.save()
-            return render(request, 'home.html')
+            instance = form.save(commit=False)
+            instance.is_active = False
+            instance.save()
+            site = get_current_site(request)
+            subject = "Confirmation message"
+            message = render_to_string('registration/confirm_email.html', {
+                'user':instance,
+                'domain':site.domain,
+                'uid':instance.id,
+                'token':activation_token.make_token(instance)
+            })
+            from_email = settings.EMAIL_HOST_USER
+            if subject and message and from_email:
+                try:
+                    send_mail(subject, message, from_email, [instance.email], fail_silently=True)
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+                return HttpResponseRedirect('/')
+            else:
+                return HttpResponse('Make sure all fields are entered and valid.')
         else:
             return render(request, 'registration/register.html', {'form': form})
     else:
@@ -117,6 +138,10 @@ def register(request):
         args = {'form': form}
         return render(request, 'registration/register.html', args)
 
+def activate(request, **kwargs):
+
+    User.objects.filter(pk=kwargs['uid']).update(is_active=True)
+    return redirect('login')
 
 def view_profile(request, pk=None):
     if pk:

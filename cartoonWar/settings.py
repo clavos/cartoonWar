@@ -125,3 +125,12 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 LOGOUT_REDIRECT_URL = '/'
+
+#Email configuration
+#DEFAULT_FROM_EMAIL = 'flores28.elodie@gmail.com'
+#SERVER_EMAIL = 'flores28.elodie@gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'flores28.elodie@gmail.com'
+EMAIL_HOST_PASSWORD = 'Sasuke14071995'
