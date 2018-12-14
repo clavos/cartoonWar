@@ -1,12 +1,13 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-    <div class="container">
-        <form method="post">
+
+        <p>Description : {{user.userprofile.description}} modifier le form</p>
+        <img src="{{ user.userprofile.image.url }}" width="240">
+        <form method="post" class="form">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit">Submit</button>
         </form>
         <br>
-    </div>
 {% endblock %}

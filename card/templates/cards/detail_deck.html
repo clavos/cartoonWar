@@ -4,28 +4,66 @@
     <div class="content">
         {% if user.is_authenticated %}
             <h1>{{ deck.deck_name }}</h1>
+            <div class="row">
             {% for card in deck.cards.all %}
-                <p>
-                    <a href="{% url 'one_card' card.pk %}">{{ card.card_name }}</a>
-                    <a href="{% url 'change_cards' operation='remove' pk=card.pk deck_pk=deck.pk %}">
-                        <button type="button">Remove Card</button>
-                    </a>
-                </p>
-
+                <div class="col-sm-2">
+                    <div class="card text-center" style="width: 11rem;">
+                        <div data-toggle="modal" data-target="#Modal{{ card.pk }}">
+                            <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer;">
+                        </div>
+                        <div class="card-body">
+                            <a href="{% url 'change_cards' operation='remove' pk=card.pk deck_pk=deck.pk %}" class="btn btn-danger">Retirer</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Card Modal -->
+                <div class="modal fade" id="Modal{{ card.pk }}" role="dialog">
+                    <div class="modal-dialog modal-sm">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="ModalLabel{{ card.pk }}">{{card.card_name}}</h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-
+            </div>
 
             <h1>Toutes mes cartes</h1>
-            {% for card in cards %}
-                <p>
-                    <a href="{% url 'one_card' card.pk %}">{{ card.card_name }}</a>
-                    {% if not card in deck.cards.all %}
-                    <a href="{% url 'change_cards' operation='add' pk=card.pk deck_pk=deck.pk %}">
-                        <button type="button">Add Card</button>
-                    </a>
-                    {% endif %}
-                </p>
-            {% endfor %}
+            <div class="row">
+                {% for all_card in cards %}
+                    <div class="col-sm-2">
+                        <div class="card text-center" style="width: 11rem;">
+                            <div data-toggle="modal" data-target="#Modal{{ all_card.pk }}">
+                                <img src='{{ all_card.card_image.url }}' alt=all_card.card_name class="card-img-top" style="cursor:pointer;">
+                            </div>
+                            {% if not all_card in deck.cards.all %}
+                            <div class="card-body">
+                                <a href="{% url 'change_cards' operation='add' pk=all_card.pk deck_pk=deck.pk %}" class="btn btn-success">Ajouter</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <!-- Card Modal -->
+                    <div class="modal fade" id="Modal{{ all_card.pk }}" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLabel{{ all_card.pk }}">{{all_card.card_name}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src='{{ all_card.card_image.url }}' alt=all_card.card_name class="card-img-top">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         {% else %}
             <p>Please login to see this page.</p>
         {% endif %}

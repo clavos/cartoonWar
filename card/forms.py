@@ -31,32 +31,27 @@ class RegistrationForm(UserCreationForm):
 
 
 class EditProfileForm(UserChangeForm):
-    template_name = '/something/else'
 
     class Meta:
         model = User
         fields = (
             'email',
             'first_name',
-            'last_name',
-            'password'
+            'last_name'
         )
 
 
 class DeckForm(forms.ModelForm):
-    # cards = forms.ModelMultipleChoiceField(queryset=Card.objects.all())
 
     class Meta:
         model = Deck
         fields = (
             'deck_name',
-            # 'cards'
         )
 
     def save(self, commit=True):
         deck = super(DeckForm, self).save(commit=False)
         deck.deck_name = self.cleaned_data['deck_name']
-        # deck.cards = self.cards
 
         if commit:
             deck.save()

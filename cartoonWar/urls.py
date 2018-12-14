@@ -24,12 +24,15 @@ from card import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('card/all/', views.get_all_cards, name='all_cards'),
+    path('card/buy/', views.get_new_cards, name='new_cards'),
     re_path(r'^card/(?P<pk>\d+)/', views.get_one_card, name='one_card'),
     re_path(r'^deck/(?P<pk>\d+)/', views.get_one_deck, name='one_deck'),
     re_path(r'^connect/(?P<operation>.+)/(?P<deck_pk>\d+)/(?P<pk>\d+)/$', views.change_cards, name='change_cards'),
+    re_path(r'^connect/(?P<operation>.+)/(?P<pk>\d+)/$', views.trade_cards, name='sell_cards'),
     path('admin/', admin.site.urls),
     path('accounts/profile/', views.profile, name='profile'),
     path('accounts/register/', views.register, name='register'),
+    re_path(r'^accounts/activate/(?P<uid>.+)/(?P<token>.+)', views.activate, name='activate'),
     re_path(r'^profile/$', views.view_profile, name='view_profile'),
     re_path(r'^profile/(?P<pk>\d+)/$', views.view_profile, name='view_profile_with_pk'),
     re_path(r'^profile/edit/$', views.edit_profile, name='edit_profile'),
@@ -43,5 +46,4 @@ urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
