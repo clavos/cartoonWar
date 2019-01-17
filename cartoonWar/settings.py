@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrap3',
     'card',
+    'forum',
 ]
 
 MIDDLEWARE = [

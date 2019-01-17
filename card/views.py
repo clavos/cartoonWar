@@ -12,9 +12,11 @@ from django.views.generic import TemplateView
 from card.forms import (
     RegistrationForm,
     EditProfileForm,
+    EditExtraProfileForm,
     DeckForm
 )
-from card.models import Card, Collection, Deck, Collec
+from card.models import Card, Collection, Deck, Collec, UserProfile
+from card.game import game
 from random import randint
 from card.token import activation_token
 
@@ -153,17 +155,22 @@ def view_profile(request, pk=None):
 
 
 def edit_profile(request):
+    user = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
+        extra_form = EditExtraProfileForm(request.POST, instance=user)
 
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            extra_form.save()
+            return redirect('edit_profile')
+        else:
+            return render(request, 'registration/edit_profile.html', {'form': form, 'extra_form': extra_form})
     else:
         form = EditProfileForm(instance=request.user)
-        args = {'form': form}
+        extra_form = EditExtraProfileForm(request.POST, instance=user)
+        args = {'form': form, 'extra_form': extra_form, 'test': user}
         return render(request, 'registration/edit_profile.html', args)
-
 
 def change_password(request):
     if request.method == 'POST':
@@ -200,3 +207,26 @@ def trade_cards(request, operation, pk):
     elif operation == 'remove':
         Collec.swap_card(card, current_user)
     return redirect('profile')
+
+def bot_game(request):
+    current_user = request.user
+    deck_player = Deck.objects.get(pk=6)
+    bot_user = User.objects.get(username="root")
+    deck_bot =  Deck.objects.get(gamer=bot_user, deck_name="Base")
+    # pk = 2
+
+    class Gamer:
+        def __init__(self, user, deck, win):
+            self.user = user
+            self.deck = deck
+            self.win = win
+
+    cards_player = deck_player.cards.all()
+    cards_bot = deck_bot.cards.all()
+
+    shizawa = Gamer(current_user, deck_player.cards.all(), 0)
+    bot = Gamer(bot_user, deck_bot.cards.all(), 0)
+
+    game(shizawa, bot)
+    return render(request, 'game.html')
+

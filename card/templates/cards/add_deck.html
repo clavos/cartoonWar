@@ -4,10 +4,7 @@
     {% if user.is_authenticated %}
         <h1>Vos Decks</h1>
         {% for deck in decks %}
-        <h2><a href="{% url 'one_deck' deck.pk %}">{{ deck.deck_name }}</a></h2>
-            {% for card in deck.cards.all %}
-                <p>{{ card.card_name }}</p>
-            {% endfor %}
+            <h2><a href="{% url 'one_deck' deck.pk %}">{{ deck.deck_name }}</a></h2>
         {% endfor %}
 
         <h1>Ajouter un deck</h1>

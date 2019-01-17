@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from card.models import Deck, Card
+from card.models import Deck, Card, UserProfile
 
 
 class RegistrationForm(UserCreationForm):
@@ -31,17 +31,55 @@ class RegistrationForm(UserCreationForm):
 
 
 class EditProfileForm(UserChangeForm):
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'email',
+        }
+    ))
+    first_name = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'first_name',
+        }
+    ))
+    last_name = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'last_name',
+        }
+    ))
 
     class Meta:
         model = User
         fields = (
             'email',
             'first_name',
-            'last_name'
+            'last_name',
+        )
+
+class EditExtraProfileForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={
+            'class': 'form-control',
+            'id': 'description',
+        }
+    ))
+    class Meta:
+        model = UserProfile
+        fields = (
+            'description',
+            'phone',
         )
 
 
 class DeckForm(forms.ModelForm):
+    deck_name = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Nom du deck',
+        }
+    ))
 
     class Meta:
         model = Deck

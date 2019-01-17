@@ -1,13 +1,36 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-
-        <p>Description : {{user.userprofile.description}} modifier le form</p>
+    <div class="row">
         <img src="{{ user.userprofile.image.url }}" width="240">
-        <form method="post" class="form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Submit</button>
-        </form>
-        <br>
+        <h3>Pseudo : {{ user.username }}</h3>
+    </div>
+    <form method="post" class="form" action="{% url 'edit_profile' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email</label>
+            {{ form.email }}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="first_name">Prénom</label>
+                {{ form.first_name }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="last_name">Nom</label>
+                {{ form.last_name }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            {{ extra_form.description }}
+            {{ extra_form.description.value }}
+            {{test.description}}
+        </div>
+
+        {{ form.errors }}
+
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
 {% endblock %}
