@@ -39,8 +39,8 @@ def get_one_card(request, **kwargs):
 def get_new_cards(request):
     current_user = request.user
     if current_user.userprofile.money > 100:
-        # current_user.userprofile.money -= 100
-        # current_user.userprofile.save()
+        current_user.userprofile.money -= 100
+        current_user.userprofile.save()
         card_count = Card.objects.all().count()
         cards = []
         for i in range(8):
@@ -200,7 +200,6 @@ def change_password(request):
             return render(request, 'registration/change_password.html', {'form': form})
     else:
         form = PasswordChangeForm(user=request.user)
-
         args = {'form': form}
         return render(request, 'registration/change_password.html', args)
 
@@ -223,6 +222,9 @@ def trade_cards(request, operation, pk):
     elif operation == 'remove':
         Collec.swap_card(card, current_user)
     return redirect('profile')
+
+def change_friends(request, operation, pk):
+    pass
 
 def partie(request):
     decks = Deck.objects.annotate(nb_card=Count('cards')).filter(nb_card=30, gamer=request.user)

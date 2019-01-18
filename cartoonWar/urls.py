@@ -24,23 +24,27 @@ from forum import views as forum_views
 
 urlpatterns = [
     path('', card_views.home, name='home'),
+    path('admin/', admin.site.urls),
+
+    path('accounts/register/', card_views.register, name='register'),
+    re_path(r'^accounts/activate/(?P<uid>.+)/(?P<token>.+)', card_views.activate, name='activate'),
+    re_path(r'^profile/edit/$', card_views.edit_profile, name='edit_profile'),
+    re_path(r'^profile/change-password/$', card_views.change_password, name='change_password'),
+
+    re_path(r'^connect/(?P<operation>.+)/(?P<pk>\d+)/$', card_views.change_friends, name='change_friends'),
+
     path('card/all/', card_views.get_all_cards, name='all_cards'),
     path('card/buy/', card_views.get_new_cards, name='new_cards'),
     re_path(r'^card/(?P<pk>\d+)/', card_views.get_one_card, name='one_card'),
     re_path(r'^deck/(?P<pk>\d+)/', card_views.get_one_deck, name='one_deck'),
     re_path(r'^connect/(?P<operation>.+)/(?P<deck_pk>\d+)/(?P<pk>\d+)/$', card_views.change_cards, name='change_cards'),
     re_path(r'^connect/(?P<operation>.+)/(?P<pk>\d+)/$', card_views.trade_cards, name='sell_cards'),
-    path('admin/', admin.site.urls),
     path('accounts/profile/', card_views.profile, name='profile'),
-    path('accounts/register/', card_views.register, name='register'),
-    re_path(r'^accounts/activate/(?P<uid>.+)/(?P<token>.+)', card_views.activate, name='activate'),
+
     re_path(r'^profile/$', card_views.view_profile, name='view_profile'),
     re_path(r'^profile/(?P<pk>\d+)/$', card_views.other_profile, name='view_profile_with_pk'),
-    re_path(r'^profile/edit/$', card_views.edit_profile, name='edit_profile'),
-    re_path(r'^profile/change-password/$', card_views.change_password, name='change_password'),
-    # path('accounts/profile/decks', views.gamer_deck, name='gamer_deck'),
-    # re_path(r'^accounts/profile/deck/(?P<pk>\d+)/', views.get_card_from_deck),
     re_path(r'^profile/decks/$', card_views.DeckView.as_view(), name='gamer_deck'),
+
     re_path(r'^game$', card_views.partie, name='game'),
     re_path(r'^game/(?P<deck_pk>\d+)/$', card_views.bot_game, name='bot_game'),
 ]

@@ -19,12 +19,6 @@
                             <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer; filter: grayscale(100%);">
                         {% endif %}
                     </div>
-                    {% if value %}
-                        <div class="card-body">
-                            <a href="{% url 'sell_cards' operation='sell' pk=card.pk %}" class="btn btn-outline-primary btn-lg btn-block">Vendre</a>
-                            <a href="#" class="btn btn-outline-primary btn-block">Echanger</a>
-                        </div>
-                    {% endif %}
                 </div>
                 <!-- Card Modal -->
                 <div class="modal fade" id="Modal{{ card.pk }}" role="dialog">
@@ -36,7 +30,6 @@
                             </div>
                             <div class="modal-body">
                                 <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top">
-                                <a href="{% url 'sell_cards' operation='sell' pk=card.pk %}" class="btn btn-outline-primary btn-lg btn-block">Vendre</a>
                             </div>
                         </div>
                     </div>
