@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, BadHeaderError
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -71,6 +72,21 @@ def profile(request):
 
     return render(request, 'registration/profile.html', {"gamer": current_user, "collec": collec, "values": values})
 
+def other_profile(request, **kwargs):
+    user = User.objects.get(pk=kwargs['pk'])
+    collec = user.collec_set.all()
+    cards = Card.objects.all()
+    values = {}
+    for all_card in cards:
+        temp = False
+        for my_collec in collec:
+            if all_card.pk == my_collec.cards.pk:
+                temp = True
+        if temp is False:
+            values[all_card] = False
+        else:
+            values[all_card] = True
+    return render(request, 'collection/other_profile.html', {"gamer": user, "collec": collec, "values": values})
 
 def get_one_deck(request, **kwargs):
     deck = Deck.objects.get(pk=kwargs['pk'])
@@ -209,12 +225,10 @@ def trade_cards(request, operation, pk):
     return redirect('profile')
 
 def partie(request):
-    decks = Deck.objects.filter(gamer=request.user)
+    decks = Deck.objects.annotate(nb_card=Count('cards')).filter(nb_card=30, gamer=request.user)
     if request.method == 'POST':
         if request.POST.get("opponent") == "bot":
-            print(request.POST.get("deck"))
             return redirect('bot_game', deck_pk=request.POST.get("deck"))
-        # return render(request, 'game/home_game.html', {'decks': decks})
     return render(request, 'game/home_game.html', {'decks':decks})
 
 def bot_game(request, deck_pk =6):
