@@ -55,7 +55,10 @@ def game(gamer1, gamer2):
 
     if gamer1.win > gamer2.win:
         print("The winner of the game is", gamer1.user.username, "!!!!!!")
+        return gamer1.user.username
     elif gamer1.win < gamer2.win:
         print("The winner of the game is", gamer2.user.username, "!!!!!!")
+        return gamer2.user.username
     else:
         print("Nobody win the game -_-")
+        return "Nobody"

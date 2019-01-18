@@ -208,12 +208,20 @@ def trade_cards(request, operation, pk):
         Collec.swap_card(card, current_user)
     return redirect('profile')
 
-def bot_game(request):
+def partie(request):
+    decks = Deck.objects.filter(gamer=request.user)
+    if request.method == 'POST':
+        if request.POST.get("opponent") == "bot":
+            print(request.POST.get("deck"))
+            return redirect('bot_game', deck_pk=request.POST.get("deck"))
+        # return render(request, 'game/home_game.html', {'decks': decks})
+    return render(request, 'game/home_game.html', {'decks':decks})
+
+def bot_game(request, deck_pk =6):
     current_user = request.user
-    deck_player = Deck.objects.get(pk=6)
+    deck_player = Deck.objects.get(pk=deck_pk)
     bot_user = User.objects.get(username="root")
     deck_bot =  Deck.objects.get(gamer=bot_user, deck_name="Base")
-    # pk = 2
 
     class Gamer:
         def __init__(self, user, deck, win):
@@ -221,12 +229,17 @@ def bot_game(request):
             self.deck = deck
             self.win = win
 
-    cards_player = deck_player.cards.all()
-    cards_bot = deck_bot.cards.all()
-
     shizawa = Gamer(current_user, deck_player.cards.all(), 0)
     bot = Gamer(bot_user, deck_bot.cards.all(), 0)
 
-    game(shizawa, bot)
-    return render(request, 'game.html')
+    winner = game(shizawa, bot)
+    # winner = "Null"
+    if winner == current_user.username:
+        UserProfile.objects.filter(user=current_user).update(money=current_user.userprofile.money+25)
+    elif winner == "Nobody":
+        UserProfile.objects.filter(user=current_user).update(money=current_user.userprofile.money + 10)
+
+    first = current_user.userprofile.money
+
+    return render(request, 'game/game.html', {'winner':winner, 'first':first})
 

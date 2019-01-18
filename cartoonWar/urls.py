@@ -41,7 +41,8 @@ urlpatterns = [
     # path('accounts/profile/decks', views.gamer_deck, name='gamer_deck'),
     # re_path(r'^accounts/profile/deck/(?P<pk>\d+)/', views.get_card_from_deck),
     re_path(r'^profile/decks/$', card_views.DeckView.as_view(), name='gamer_deck'),
-    re_path(r'^game$', card_views.bot_game, name='bot_game'),
+    re_path(r'^game$', card_views.partie, name='game'),
+    re_path(r'^game/(?P<deck_pk>\d+)/$', card_views.bot_game, name='bot_game'),
 ]
 
 urlpatterns += [
