@@ -133,7 +133,10 @@ figure {
     position: relative;
 }
 
-
+.background-heading {
+    padding: 5px;
+    background: rgba(255, 255, 255, .6);
+}
 /* --------- 1.1 Input Elements ---------- */
 
 input, textarea {
