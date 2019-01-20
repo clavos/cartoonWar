@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="content">
+        {% if user.is_authenticated %}
+        <h1>Vos Amis</h1>
+        <div class="row">
+            {% for friend in friends %}
+                <a href="{% url 'view_profile_with_pk' pk=friend.user.pk %}">{{ friend.user.username }}</a>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>Veuillez vous connecter pour voir la page.</p>
+        {% endif %}
+    </div>
+{% endblock %}
