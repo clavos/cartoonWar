@@ -31,7 +31,9 @@ urlpatterns = [
     re_path(r'^profile/edit/$', card_views.edit_profile, name='edit_profile'),
     re_path(r'^profile/change-password/$', card_views.change_password, name='change_password'),
 
-    re_path(r'^connect/(?P<operation>.+)/(?P<pk>\d+)/$', card_views.change_friends, name='change_friends'),
+    re_path(r'^follow/(?P<operation>.+)/(?P<pk>\d+)/$', card_views.change_follows, name='change_follows'),
+
+    re_path(r'^research/$', card_views.get_research, name='get_research'),
 
     path('card/all/', card_views.get_all_cards, name='all_cards'),
     path('card/buy/', card_views.get_new_cards, name='new_cards'),

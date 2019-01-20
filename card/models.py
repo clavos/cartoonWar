@@ -93,11 +93,25 @@ class UserProfile(models.Model):
     phone = models.CharField(max_length=10,default='', blank=True, null=True)
     image = models.ImageField(upload_to='profile_image', blank=True, null=True)
     money = models.IntegerField(default=200)
-    friends = models.ManyToManyField("UserProfile", blank=True, related_name="my_friends")
-    following = models.ManyToManyField("UserProfile", blank=True, related_name="my_following")
+    friends = models.ManyToManyField("UserProfile", blank=True, null=True, related_name="my_friends")
+    following = models.ManyToManyField("UserProfile", blank=True, null=True, related_name="my_following")
 
     def __str__(self):
         return self.user.username
+
+    @classmethod
+    def follow_user(cls, current_user, new_follower):
+        follower, created = cls.objects.get_or_create(
+            user=current_user
+        )
+        follower.following.add(new_follower)
+
+    @classmethod
+    def unfollow_user(cls, current_user, new_follower):
+        follower, created = cls.objects.get_or_create(
+            user=current_user
+        )
+        follower.following.remove(new_follower)
 
 
 def create_profile(sender, **kwargs):
@@ -108,5 +122,6 @@ def create_profile(sender, **kwargs):
             collection = Collec.objects.create(current_user=kwargs['instance'], quantity=1, cards=Card.objects.get(pk=i))
             deck.cards.add(Card.objects.get(pk=i))
         deck.save()
+
 
 post_save.connect(create_profile, sender=User)

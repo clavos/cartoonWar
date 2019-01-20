@@ -2,7 +2,6 @@
 
 {% block content %}
     <div class="row">
-        <img src="{{ user.userprofile.image.url }}" width="240">
         <h3>Pseudo : {{ user.username }}</h3>
     </div>
     <form method="post" class="form" action="{% url 'edit_profile' %}">
@@ -31,6 +30,11 @@
 
         {{ form.errors }}
 
-        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="submit" class="btn btn-success">Modifier</button>
     </form>
+    <div class="row">
+        {% if user.is_authenticated %}
+            <a href="{% url 'change_password' %}" class="btn btn-primary">Changer de mot de passe</a>
+        {% endif %}
+    </div>
 {% endblock %}

@@ -56,7 +56,9 @@ class EditProfileForm(UserChangeForm):
             'email',
             'first_name',
             'last_name',
+            'password'
         )
+
 
 class EditExtraProfileForm(forms.ModelForm):
     description = forms.CharField(widget=forms.Textarea(
@@ -65,6 +67,7 @@ class EditExtraProfileForm(forms.ModelForm):
             'id': 'description',
         }
     ))
+
     class Meta:
         model = UserProfile
         fields = (
