@@ -54,6 +54,7 @@ urlpatterns = [
 urlpatterns += [
     path('forum/', forum_views.forum, name='forum'),
     path('forum/article/all', forum_views.get_all_articles, name='all_articles'),
+    re_path(r'^forum/article/(?P<pk>\d+)/', forum_views.get_one_article, name='one_article'),
 ]
 
 urlpatterns += [
