@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="content">
+        <h1>Tous les articles</h1>
+        <div class="row">
+            {% for article in articles %}
+                <div class="card" style="cursor:pointer;">
+                    <div class="card-header">
+                        <h5>{{ article.title }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ article.content}}</p>
+                    </div>
+                    <div class="card-footer">
+                      <small class="text-muted">Publié le : {{ article.publish_date }} par {{ article.publisher }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

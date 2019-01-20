@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Vos Decks</h1>
+        {% for deck in decks %}
+            <h2><a href="{% url 'one_deck' deck.pk %}">{{ deck.deck_name }}</a></h2>
+        {% endfor %}
+
+        <h1>Ajouter un deck</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <br>
+            <button type="submit" class="btn btn-success">Ajouter</button>
+        </form>
+        {{ form.errors }}
+        {{ form.non_field_errors }}
+    {% else %}
+        <p>Please login to see this page.</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        Script Game -> A voir sur la console
+        <p>Winner : {{ winner }}</p>
+    {% else %}
+        <p>Please login to see this page.</p>
+    {% endif %}
+{% endblock %}
