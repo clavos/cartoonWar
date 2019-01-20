@@ -4,10 +4,6 @@ from forum.models import Article, Comment
 from card.models import UserProfile
 
 
-def forum(request):
-    return render(request, 'forum.html')
-
-
 def get_all_articles(request):
     form = ArticleForm()
     articles = Article.objects.all()
@@ -17,8 +13,7 @@ def get_all_articles(request):
             article = form.save(commit=False)
             article.publisher = UserProfile.objects.get(user=request.user)
             article.save()
-            print(article)
-            return redirect('all_articles')
+        return redirect('all_articles')
 
     return render(request, 'forum/articles.html', {"articles": articles, 'form': form})
 
