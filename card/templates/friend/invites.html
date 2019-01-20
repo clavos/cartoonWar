@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="content">
+        {% if user.is_authenticated %}
+        <h1>Vos Invitations</h1>
+        <div class="row">
+            {% for invite in invites %}
+                {{ invite.from_user }} :
+                {{ invite.message }}
+                <a class="btn" href="{% url 'invite_friend' operation='confirm' pk=invite.pk %}">Accepter</a>
+                <a class="btn" href="{% url 'invite_friend' operation='refuse' pk=invite.pk %}">Refuser</a>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p>Veuillez vous connecter pour voir la page.</p>
+        {% endif %}
+    </div>
+{% endblock %}

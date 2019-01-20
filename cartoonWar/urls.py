@@ -33,6 +33,9 @@ urlpatterns = [
 
     re_path(r'^follow/(?P<operation>.+)/(?P<pk>\d+)/$', card_views.change_follows, name='change_follows'),
 
+    re_path(r'^friendship/(?P<operation>.+)/(?P<pk>\d+)/$', card_views.invite_friend, name='invite_friend'),
+    path('invites/', card_views.all_invites, name='all_invites'),
+    path('friends/', card_views.all_friends, name='all_friends'),
     re_path(r'^research/$', card_views.get_research, name='get_research'),
 
     path('card/all/', card_views.get_all_cards, name='all_cards'),
@@ -52,8 +55,8 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path('forum/', forum_views.forum, name='forum'),
     path('forum/article/all', forum_views.get_all_articles, name='all_articles'),
+    re_path(r'^forum/article/(?P<pk>\d+)/', forum_views.get_one_article, name='one_article'),
 ]
 
 urlpatterns += [
