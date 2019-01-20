@@ -16,7 +16,7 @@ from card.forms import (
     EditExtraProfileForm,
     DeckForm
 )
-from card.models import Card, Collection, Deck, Collec, UserProfile
+from card.models import Card, Collection, Deck, Collec, UserProfile, FriendshipRequest
 from card.game import game
 from random import randint
 from card.token import activation_token
@@ -235,6 +235,42 @@ def change_follows(request, operation, pk):
     elif operation == 'remove':
         UserProfile.unfollow_user(request.user, follower)
     return redirect('get_research')
+
+
+def invite_friend(request, operation, pk):
+    current_user = UserProfile.objects.get(user=request.user)
+    if operation == 'send':
+        new_friend = UserProfile.objects.get(user=User.objects.get(pk=pk))
+        f_request = FriendshipRequest.objects.get_or_create(
+            from_user=current_user,
+            to_user=new_friend,
+            message=request.POST.get("message")
+        )
+        return redirect('get_research')
+    elif operation == 'confirm':
+        invite = FriendshipRequest.objects.get(pk=pk)
+        from_user = UserProfile.objects.get(user=invite.from_user.user)
+        to_user = UserProfile.objects.get(user=invite.to_user.user)
+        from_user.friends.add(to_user)
+        to_user.friends.add(from_user)
+        invite.delete()
+        return redirect('all_invites')
+    elif operation == 'refuse':
+        invite = FriendshipRequest.objects.get(pk=pk)
+        invite.delete()
+        return redirect('all_invites')
+
+
+def all_invites(request):
+    current_user = UserProfile.objects.get(user=request.user)
+    invites = FriendshipRequest.objects.filter(to_user=current_user)
+    return render(request, 'friend/invites.html', {'invites': invites})
+
+
+def all_friends(request):
+    current_user = UserProfile.objects.get(user=request.user)
+    friends = current_user.friends.all()
+    return render(request, 'friend/friends.html', {'friends': friends})
 
 
 def partie(request):

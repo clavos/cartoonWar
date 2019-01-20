@@ -10,12 +10,35 @@
                     <a href="{% url 'view_profile_with_pk' pk=user.pk %}">{{ user.username }}</a>
                     {% if value %}
                         <a href="{% url 'change_follows' operation='remove' pk=user.pk %}"
-                           class="badge badge-pill badge-secondary">unfolllow</a>
+                           class="badge badge-pill badge-secondary">Unfolllow</a>
                     {% else %}
                         <a href="{% url 'change_follows' operation='add' pk=user.pk %}"
-                           class="badge badge-pill badge-secondary">suivre</a>
+                           class="badge badge-pill badge-secondary">Suivre</a>
                     {% endif %}
+                    <div data-toggle="modal" data-target="#Modal{{ user.pk }}">
+                        <span class="badge badge-pill badge-secondary" style="cursor:pointer;">Ajouter en ami</span>
+                    </div>
                 </p>
+            </div>
+        </div>
+        <!-- Card Modal -->
+        <div class="modal fade" id="Modal{{ user.pk }}" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalLabel{{ user.pk }}">Envoyer une invitation</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form" method="post"
+                              action="{% url 'invite_friend' operation='send' pk=user.pk %}">
+                            {% csrf_token %}
+                            <input class="form-control" type="text" placeholder="Votre message"
+                                   name="message" id="message">
+                            <button class="btn btn-outline-primary btn-lg btn-block">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     {% endfor %}

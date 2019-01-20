@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from card.models import Deck, Card, UserProfile
+from card.models import Deck, Card, UserProfile, FriendshipRequest
 
 
 class RegistrationForm(UserCreationForm):
@@ -98,4 +98,3 @@ class DeckForm(forms.ModelForm):
             deck.save()
 
         return deck
-

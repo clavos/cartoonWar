@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# EMEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "cartoonWar/media")
@@ -127,11 +127,8 @@ STATIC_URL = '/static/'
 
 LOGOUT_REDIRECT_URL = '/'
 
-#Email configuration
-#DEFAULT_FROM_EMAIL = 'flores28.elodie@gmail.com'
-#SERVER_EMAIL = 'flores28.elodie@gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'flores28.elodie@gmail.com'
-EMAIL_HOST_PASSWORD = 'Sasuke14071995'
+EMAIL_HOST_USER = 'djangocartoonwar@gmail.com'
+EMAIL_HOST_PASSWORD = 'Skyhighsurvival120'
