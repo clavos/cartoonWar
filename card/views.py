@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail, BadHeaderError
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -12,9 +13,11 @@ from django.views.generic import TemplateView
 from card.forms import (
     RegistrationForm,
     EditProfileForm,
+    EditExtraProfileForm,
     DeckForm
 )
-from card.models import Card, Collection, Deck, Collec
+from card.models import Card, Collection, Deck, Collec, UserProfile
+from card.game import game
 from random import randint
 from card.token import activation_token
 
@@ -36,8 +39,8 @@ def get_one_card(request, **kwargs):
 def get_new_cards(request):
     current_user = request.user
     if current_user.userprofile.money > 100:
-        # current_user.userprofile.money -= 100
-        # current_user.userprofile.save()
+        current_user.userprofile.money -= 100
+        current_user.userprofile.save()
         card_count = Card.objects.all().count()
         cards = []
         for i in range(8):
@@ -70,6 +73,23 @@ def profile(request):
     return render(request, 'registration/profile.html', {"gamer": current_user, "collec": collec, "values": values})
 
 
+def other_profile(request, **kwargs):
+    user = User.objects.get(pk=kwargs['pk'])
+    collec = user.collec_set.all()
+    cards = Card.objects.all()
+    values = {}
+    for all_card in cards:
+        temp = False
+        for my_collec in collec:
+            if all_card.pk == my_collec.cards.pk:
+                temp = True
+        if temp is False:
+            values[all_card] = False
+        else:
+            values[all_card] = True
+    return render(request, 'collection/other_profile.html', {"gamer": user, "collec": collec, "values": values})
+
+
 def get_one_deck(request, **kwargs):
     deck = Deck.objects.get(pk=kwargs['pk'])
     current_user = request.user
@@ -94,8 +114,6 @@ class DeckView(TemplateView):
         if form.is_valid():
             deck = form.save(commit=False)
             deck.gamer = request.user
-            # deck.deck_name = form.cleaned_data['deck_name']
-            # deck.cards.set(form['cards'])
             deck.save()
 
             return redirect('gamer_deck')
@@ -138,10 +156,12 @@ def register(request):
         args = {'form': form}
         return render(request, 'registration/register.html', args)
 
+
 def activate(request, **kwargs):
 
     User.objects.filter(pk=kwargs['uid']).update(is_active=True)
     return redirect('login')
+
 
 def view_profile(request, pk=None):
     if pk:
@@ -153,15 +173,21 @@ def view_profile(request, pk=None):
 
 
 def edit_profile(request):
+    user = UserProfile.objects.get(user=request.user)
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=request.user)
+        extra_form = EditExtraProfileForm(request.POST, instance=user)
 
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            extra_form.save()
+            return redirect('edit_profile')
+        else:
+            return render(request, 'registration/edit_profile.html', {'form': form, 'extra_form': extra_form})
     else:
         form = EditProfileForm(instance=request.user)
-        args = {'form': form}
+        extra_form = EditExtraProfileForm(request.POST, instance=user)
+        args = {'form': form, 'extra_form': extra_form, 'test': user}
         return render(request, 'registration/edit_profile.html', args)
 
 
@@ -177,7 +203,6 @@ def change_password(request):
             return render(request, 'registration/change_password.html', {'form': form})
     else:
         form = PasswordChangeForm(user=request.user)
-
         args = {'form': form}
         return render(request, 'registration/change_password.html', args)
 
@@ -185,7 +210,8 @@ def change_password(request):
 def change_cards(request, operation, pk, deck_pk):
     card = Card.objects.get(pk=pk)
     deck = Deck.objects.get(pk=deck_pk)
-    if operation == 'add':
+    nb_card = deck.cards.all().count()
+    if operation == 'add' and nb_card < 30:
         Deck.make_card(deck, request.user, card)
     elif operation == 'remove':
         Deck.lose_card(deck, request.user, card)
@@ -200,3 +226,72 @@ def trade_cards(request, operation, pk):
     elif operation == 'remove':
         Collec.swap_card(card, current_user)
     return redirect('profile')
+
+
+def change_follows(request, operation, pk):
+    follower = UserProfile.objects.get(user=User.objects.get(pk=pk))
+    if operation == 'add':
+        UserProfile.follow_user(request.user, follower)
+    elif operation == 'remove':
+        UserProfile.unfollow_user(request.user, follower)
+    return redirect('get_research')
+
+
+def partie(request):
+    decks = Deck.objects.annotate(nb_card=Count('cards')).filter(nb_card=30, gamer=request.user)
+    if request.method == 'POST':
+        if request.POST.get("opponent") == "bot":
+            return redirect('bot_game', deck_pk=request.POST.get("deck"))
+    return render(request, 'game/home_game.html', {'decks': decks})
+
+
+def bot_game(request, deck_pk):
+    current_user = request.user
+    deck_player = Deck.objects.get(pk=deck_pk)
+    bot_user = User.objects.get(username="root")
+    deck_bot = Deck.objects.get(gamer=bot_user, deck_name="Base")
+
+    class Gamer:
+        def __init__(self, user, deck, win):
+            self.user = user
+            self.deck = deck
+            self.win = win
+
+    shizawa = Gamer(current_user, deck_player.cards.all(), 0)
+    bot = Gamer(bot_user, deck_bot.cards.all(), 0)
+
+    winner = game(shizawa, bot)
+    if winner == current_user.username:
+        UserProfile.objects.filter(user=current_user).update(money=current_user.userprofile.money+25)
+    elif winner == "Nobody":
+        UserProfile.objects.filter(user=current_user).update(money=current_user.userprofile.money + 10)
+
+    first = current_user.userprofile.money
+
+    return render(request, 'game/game.html', {'winner': winner, 'first': first})
+
+
+def get_research(request):
+    user_profile = UserProfile.objects.get(user=request.user)
+    followers = user_profile.following.all()
+    values = {}
+    if request.method == 'POST':
+        cards = Card.objects.filter(card_name__startswith=request.POST.get("research"))
+        users = User.objects.filter(username__startswith=request.POST.get("research"))
+    else:
+        cards = Card.objects.filter(card_name__startswith="")
+        users = User.objects.filter(username__startswith="")
+    for all_user in users:
+        temp = False
+        for my_follower in followers:
+            if all_user.pk == my_follower.user.pk:
+                temp = True
+        if temp is False:
+            values[all_user] = False
+        else:
+            values[all_user] = True
+    return render(request, 'research_result.html', {'cards': cards, 'users': users, 'values': values})
+
+
+
+
