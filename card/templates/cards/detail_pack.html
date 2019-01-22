@@ -1,0 +1,19 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="content">
+        <div class="row">
+            {% for card in cards %}
+                <div class="col-sm-3">
+                    <div>
+                        <div>
+                            <img src='{{ card.card_image.url }}'
+                             alt=card.card_name class="face back" style="width: 12rem;">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

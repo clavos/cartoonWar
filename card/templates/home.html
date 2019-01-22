@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head lang="fr">
+    <meta charset="UTF-8">
+
+    <!--Page Title-->
+    <title>Cartoon War</title>
+
+    <!--Meta Keywords and Description-->
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+
+    {% load static %}
+    <!--Favicon-->
+    <link rel="shortcut icon" href="media/images/favicon.ico" title="Favicon"/>
+
+    <!-- Main CSS Files -->
+    <link rel="stylesheet" href="media/css/style.css">
+
+    <!-- Namari Color CSS -->
+    <link rel="stylesheet" href="media/css/namari-color.css">
+
+    <!--Icon Fonts - Font Awesome Icons-->
+    <link rel="stylesheet" href="media/css/font-awesome.min.css">
+
+    <!-- Animate CSS-->
+    <link href="media/css/animate.css" rel="stylesheet" type="text/css">
+
+    <!--Google Webfonts-->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+
+</head>
+<body>
+    <header id="banner" class="scrollto clearfix" data-enllax-ratio=".5">
+        <div id="header" class="nav-collapse">
+            <div class="row clearfix">
+                <div class="col-1">
+
+                    <!--Logo-->
+                    <div id="logo">
+
+                        <!--Logo that is shown on the banner-->
+                        <div id="banner-logo"><h1>Cartoon War</h1></div>
+                        <!--End of Banner Logo-->
+
+                        <!--The Logo that is shown on the sticky Navigation Bar-->
+                        <div id="navigation-logo"><h1>Cartoon War</h1></div>
+                        <!--End of Navigation Logo-->
+
+                    </div>
+                    <!--End of Logo-->
+
+
+                    <!--Main Navigation-->
+                    <nav id="nav-main">
+                        <ul>
+                            <li>
+                                <a href="#banner">Home</a>
+                            </li>
+                            <li>
+                                <a href="#services">Services</a>
+                            </li>
+                            <li>
+                                <a href="#testimonials">Testimonials</a>
+                            </li>
+                            {% if user.is_authenticated == False %}
+                            <li>
+                                <a href="{% url 'login' %}">Connexion</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'register' %}">Inscription</a>
+                            </li>
+                            {% endif %}
+                            {% if user.is_authenticated %}
+                            <li>
+                                <a href="{% url 'edit_profile' %}">Profil</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'logout' %}">Déconnexion</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    <!--End of Main Navigation-->
+
+                    <div id="nav-trigger"><span></span></div>
+                    <nav id="nav-mobile"></nav>
+
+                </div>
+            </div>
+        </div><!--End of Header-->
+
+        <!--Banner Content-->
+        <div id="banner-content" class="row clearfix">
+
+            <div class="col-38">
+
+                <div class="section-heading">
+                    <h1>UNLEASHED YOUR POWER</h1>
+                    <h2 class="background-heading"><b> Draw your deck, and get ready for Cartoon War - The fast-paced strategy card game that's easy to learn and massively fun !</b></h2>
+                </div>
+
+            </div>
+
+        </div><!--End of Row-->
+    </header>
+
+    <!--Main Content Area-->
+    <main id="content">
+
+        <!--Content Section-->
+        <div id="services" class="scrollto clearfix">
+
+            <div class="row no-padding-bottom clearfix">
+
+
+                <!--Content Left Side-->
+                <div class="col-3">
+                    <!--User Testimonial-->
+                    <blockquote class="testimonial text-right bigtest">
+                        <q>A funny game which is fun to play when I have some time. Wich is now a lot of time since I lost my job thank to this game.</q>
+                        <footer>— Thomas Doe, Sorrowful Customer</footer>
+                    </blockquote>
+                    <!-- End of Testimonial-->
+
+                </div>
+                <!--End Content Left Side-->
+
+                <!--Content of the Right Side-->
+                <div class="col-3">
+                    <div class="section-heading">
+                        <h3>FIGHTING</h3>
+                        <h2 class="section-title">Sheathe your sword</h2>
+                        <p class="section-subtitle">Itching to pick up a deck and start playing? There's no better way to learn than to simply download Cartoon War now and get started! </p>
+                    </div>
+                    <p>The match begins with a coin toss to determine who goes first, followed by both players drawing their starting hands: three cards for the coin toss winner, four for the other player.
+                        And because going first does offer a slight strategic advantage, the loser of the coin toss also gets The Coin: a special zero cost card that temporarily increases your mana by one!
+                        You can mulligan as many cards from your starting hands as you like. Once both players accept their hand, the match proper begins.
+                    </p>
+
+                </div>
+                <!--End Content Right Side-->
+
+                <div class="col-3">
+                    <img src="media/images/homeCharacters.png" alt="characters"/>
+                </div>
+
+            </div>
+
+
+        </div>
+        <!--End of Content Section-->
+
+        <!--Testimonials-->
+        <aside id="testimonials" class="scrollto text-center" data-enllax-ratio=".2">
+
+            <div class="row clearfix">
+
+                <div class="section-heading">
+                    <h3>FEEDBACK</h3>
+                    <h2 class="section-title">What our warriors are saying</h2>
+                </div>
+
+                <!--User Testimonial-->
+                <blockquote class="col-3 testimonial classic">
+                    <img src="media/images/user-images/user-1.jpg" alt="User"/>
+                    <q>The best game I have ever played in my life ! How could this even exist ?!</q>
+                    <footer>John Doe - Happy Customer</footer>
+                </blockquote>
+                <!-- End of Testimonial-->
+
+                <!--User Testimonial-->
+                <blockquote class="col-3 testimonial classic">
+                    <img src="media/images/user-images/user-2.jpg" alt="User"/>
+                    <q>It was really fun playing this with my friends ! I am waiting for the next update !</q>
+                    <footer>Roslyn Doe - Happy Customer</footer>
+                </blockquote>
+                <!-- End of Testimonial-->
+
+                <!--User Testimonial-->
+                <blockquote class="col-3 testimonial classic">
+                    <img src="media/images/user-images/user-3.jpg" alt="User"/>
+                    <q>A funny game which is fun to play when I have some time. Wich is now a lot of time since I lost my job thank to this game.</q>
+                    <footer>Thomas Doe - Happy Customer</footer>
+                </blockquote>
+                <!-- End of Testimonial-->
+
+            </div>
+
+        </aside>
+        <!--End of Testimonials-->
+
+    </main>
+    <!--End Main Content Area-->
+
+
+    <!--Footer-->
+    <footer id="landing-footer" class="clearfix">
+        <div class="row clearfix">
+
+        </div>
+    </footer>
+    <!--End of Footer-->
+
+<!-- Include JavaScript resources -->
+<script src="media/js/jquery.1.8.3.min.js"></script>
+<script src="media/js/wow.min.js"></script>
+<script src="media/js/featherlight.min.js"></script>
+<script src="media/js/featherlight.gallery.min.js"></script>
+<script src="media/js/jquery.enllax.min.js"></script>
+<script src="media/js/jquery.scrollUp.min.js"></script>
+<script src="media/js/jquery.easing.min.js"></script>
+<script src="media/js/jquery.stickyNavbar.min.js"></script>
+<script src="media/js/jquery.waypoints.min.js"></script>
+<script src="media/js/images-loaded.min.js"></script>
+<script src="media/js/lightbox.min.js"></script>
+<script src="media/js/site.js"></script>
+
+
+</body>
+</html>

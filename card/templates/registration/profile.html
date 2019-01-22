@@ -1,0 +1,51 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h1>Votre collection de cartes</h1>
+        <div class="row">
+            {% for card, value in values.items %}
+                <div class="col-sm-2">
+                    <div class="card text-center" style="width: 11rem;">
+                        <div data-toggle="modal" data-target="#Modal{{ card.pk }}">
+                            {% if value %}
+                                {% for collect in collec %}
+                                    {% if collect.cards.pk == card.pk %}
+                                        <span class="badge badge-pill badge-success">X{{collect.quantity}}</span>
+                                    {% endif %}
+                                {% endfor %}
+                                <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer;">
+                            {% else %}
+                                <span class="badge badge-pill badge-secondary">X0</span>
+                                <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top" style="cursor:pointer; filter: grayscale(100%);">
+                            {% endif %}
+                        </div>
+                        {% if value %}
+                            <div class="card-body">
+                                <a href="{% url 'sell_cards' operation='sell' pk=card.pk %}" class="btn btn-outline-primary btn-lg btn-block">Vendre</a>
+                                <a href="#" class="btn btn-outline-primary btn-block">Echanger</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <!-- Card Modal -->
+                    <div class="modal fade" id="Modal{{ card.pk }}" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="ModalLabel{{ card.pk }}">{{card.card_name}}</h5>
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src='{{ card.card_image.url }}' alt=card.card_name class="card-img-top">
+                                    <a href="{% url 'sell_cards' operation='sell' pk=card.pk %}" class="btn btn-outline-primary btn-lg btn-block">Vendre</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Please login to see this page.</p>
+    {% endif %}
+{% endblock %}
