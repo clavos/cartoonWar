@@ -1,0 +1,40 @@
+{% extends 'base_generic.html' %}
+
+{% block content %}
+    <div class="row">
+        <h3>Pseudo : {{ user.username }}</h3>
+    </div>
+    <form method="post" class="form" action="{% url 'edit_profile' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="email">Email</label>
+            {{ form.email }}
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="first_name">Prénom</label>
+                {{ form.first_name }}
+            </div>
+            <div class="form-group col-md-6">
+                <label for="last_name">Nom</label>
+                {{ form.last_name }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            {{ extra_form.description }}
+            {{ extra_form.description.value }}
+            {{test.description}}
+        </div>
+
+        {{ form.errors }}
+
+        <button type="submit" class="btn btn-success">Modifier</button>
+    </form>
+    <div class="row">
+        {% if user.is_authenticated %}
+            <a href="{% url 'change_password' %}" class="btn btn-primary">Changer de mot de passe</a>
+        {% endif %}
+    </div>
+{% endblock %}

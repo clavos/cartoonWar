@@ -1,0 +1,38 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="content">
+        <div class="card">
+            <div class="card-header">
+                <h5><a href="{% url 'one_article' article.pk %}">{{ article.title }}</a></h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ article.content}}</p>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted">Publié le : {{ article.publish_date }} par {{ article.publisher }}</small>
+            </div>
+        </div>
+        <h4>Commentaires</h4>
+        {% for comment in comments %}
+            <div class="card text-white bg-dark">
+                <div class="card-body">
+                    {{ comment.content }}
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Publié le : {{ comment.publish_date }} par {{ comment.publisher }}</small>
+                </div>
+            </div>
+        {% endfor %}
+        <h4>Ajouter un commentaire</h4>
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Ajouter</button>
+            </form>
+        {% else %}
+            <p>Veuillez vous connecter pour laisser un commentaire</p>
+        {% endif %}
+    </div>
+{% endblock %}
