@@ -2327,6 +2327,11 @@ blockquote {
         height: 432px !important;
     }
 
+    /*-----------------Login-----------------*/
+
+    .login_container {
+        margin: 5px;
+    }
 }
 
 
