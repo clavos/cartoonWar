@@ -4,6 +4,6 @@ RUN mkdir /code
 WORKDIR /code
 COPY requirements.txt /code/
 RUN pip install -r requirements.txt
-RUN pip install -r Pillow
-RUN pip install -r django-bootstrap3
+RUN pip install Pillow
+RUN pip install django-bootstrap3
 COPY . /code/
