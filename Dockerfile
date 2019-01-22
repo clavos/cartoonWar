@@ -7,3 +7,4 @@ RUN pip install -r requirements.txt
 RUN pip install Pillow
 RUN pip install django-bootstrap3
 COPY . /code/
+RUN python manage.py migrate
