@@ -1,0 +1,32 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <div class="content">
+        <h1>Tous les articles</h1>
+        <div class="row">
+            {% for article in articles %}
+                <div class="card">
+                    <div class="card-header">
+                        <h5><a href="{% url 'one_article' article.pk %}">{{ article.title }}</a></h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">{{ article.content}}</p>
+                    </div>
+                    <div class="card-footer">
+                      <small class="text-muted">Publié le : {{ article.publish_date }} par {{ article.publisher }}</small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <h4>Nouveau Post</h4>
+        {% if user.is_authenticated %}
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success">Ajouter</button>
+            </form>
+        {% else %}
+            <p>Veuillez vous connecter pour créer un nouveau post</p>
+        {% endif %}
+    </div>
+{% endblock %}

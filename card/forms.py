@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from card.models import Deck, Card
+from card.models import Deck, Card, UserProfile, FriendshipRequest
 
 
 class RegistrationForm(UserCreationForm):
@@ -31,7 +31,24 @@ class RegistrationForm(UserCreationForm):
 
 
 class EditProfileForm(UserChangeForm):
-    template_name = '/something/else'
+    email = forms.EmailField(widget=forms.EmailInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'email',
+        }
+    ))
+    first_name = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'first_name',
+        }
+    ))
+    last_name = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'id': 'last_name',
+        }
+    ))
 
     class Meta:
         model = User
@@ -43,23 +60,41 @@ class EditProfileForm(UserChangeForm):
         )
 
 
+class EditExtraProfileForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={
+            'class': 'form-control',
+            'id': 'description',
+        }
+    ))
+
+    class Meta:
+        model = UserProfile
+        fields = (
+            'description',
+            'phone',
+        )
+
+
 class DeckForm(forms.ModelForm):
-    # cards = forms.ModelMultipleChoiceField(queryset=Card.objects.all())
+    deck_name = forms.CharField(widget=forms.TextInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Nom du deck',
+        }
+    ))
 
     class Meta:
         model = Deck
         fields = (
             'deck_name',
-            # 'cards'
         )
 
     def save(self, commit=True):
         deck = super(DeckForm, self).save(commit=False)
         deck.deck_name = self.cleaned_data['deck_name']
-        # deck.cards = self.cards
 
         if commit:
             deck.save()
 
         return deck
-
